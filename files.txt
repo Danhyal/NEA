@@ -1,0 +1,2 @@
+app/build/intermediates/merged_java_res/debug/out.jar
+gradle/wrapper/gradle-wrapper.jar

@@ -1,0 +1,433 @@
+
+
+@startuml
+left to right direction
+scale 1024 width
+scale 3072 height
+
+title __NEA's Class Diagram__\n
+
+  namespace com.danhyal.NEA {
+
+    class com.danhyal.NEA.CameraAct {
+
+        ~ TAG : String
+        ~ TensorCocoClasses : String[]
+        ~ Yolov3CocoClasses : String[]
+        ~ blobscale : Scalar
+        ~ converter1 : ToMat
+        ~ converter2 : ToOrgOpenCvCoreMat
+        ~ cvnet : Net
+        ~ darray : double[]
+        ~ dnnnet : Net
+        ~ handler : Handler
+        ~ have_opencl : int
+        ~ holderTransparent : SurfaceHolder
+        ~ mat1 : Mat
+        ~ mat2 : Mat
+        ~ mat3 : Mat
+        ~ mat4 : Mat
+        ~ mat5 : Mat
+        ~ net : String
+        ~ objects : List<Mat>
+        ~ opencl_mat : UMat
+        ~ trackingOverlay : OverlayView
+        + GetDimensions()
+        + MobileNet()
+        + MobileNetCL()
+        + onCameraFrame()
+        + onCameraViewStarted()
+        + onCameraViewStopped()
+        + processyolo()
+        + t1()
+        {static} + toMat()
+        {static} + toUMat()
+        + yolonet()
+        # onCreate()
+        ~ runInBackground()
+        - DrawFocusRect()
+        {static} - getOutputNames()
+        {static} - getPath()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    interface com.danhyal.NEA.CameraAct.OnEventListener {
+        {abstract} + onFailure()
+        {abstract} + onSuccess()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.CameraAct.yoloasync {
+        + mException : Exception
+        ~ box : Rect
+        ~ result : List<Mat>
+        - mCallBack : OnEventListener<List<Mat>>
+        - mContext : Context
+        + yoloasync()
+        # doInBackground()
+        # onPostExecute()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.Classifier {
+        # imgData : ByteBuffer
+        # tflite : Interpreter
+        ~ isquantanized : boolean
+        ~ recognitions : ArrayList<Recognition>
+        {static} - BYTES_PER_CHANNEL : int
+        {static} - DIM_BATCH_SIZE : int
+        {static} - DIM_PIXEL_SIZE : int
+        {static} - IMAGE_MEAN : float
+        {static} - IMAGE_STD : float
+        {static} - NUM_DETECTIONS : int
+        - gpuDelegate : GpuDelegate
+        - height : int
+        - intValues : int[]
+        - labelProbArray : float[][]
+        - labels : List<String>
+        - numDetections : float[]
+        - outputClasses : float[][]
+        - outputLocations : float[][][]
+        - outputScores : float[][]
+        - tfliteModel : MappedByteBuffer
+        - tfliteOptions : Options
+        - width : int
+        + getLabelProbArray()
+        + recognize()
+        # Classifier()
+        # addPixelValue()
+        - convertBitmapToByteBuffer()
+        - loadLabelList()
+        - loadModelFile()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.Classifier.Recognition {
+        - confidence : Float
+        - id : String
+        - location : RectF
+        - title : String
+        + Recognition()
+        + getConfidence()
+        + getId()
+        + getLocation()
+        + getTitle()
+        + setLocation()
+        + toString()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.CvCameraPreview {
+        {static} + CAMERA_BACK : int
+        {static} + CAMERA_FRONT : int
+        {static} + SCALE_FIT : int
+        {static} + SCALE_FULL : int
+        # cameraFrame : Frame[]
+        # enabled : boolean
+        ~ mainActivity : Context
+        - ASPECT_RATIO_H : float
+        - ASPECT_RATIO_W : float
+        {static} - CAMERA_PERMISSION_REQUEST_CODE : int
+        - LOG_TAG : String
+        {static} - MAGIC_TEXTURE_ID : int
+        - PICTURE_MAX_WIDTH : int
+        - PREVIEW_MAX_WIDTH : int
+        {static} - STARTED : int
+        {static} - STOPPED : int
+        - ScreenSize : Size
+        - cacheBitmap : Bitmap
+        - cameraDevice : Camera
+        - cameraFrameReady : boolean
+        - cameraId : int
+        - cameraType : int
+        - chainIdx : int
+        - converterToBitmap : AndroidFrameConverter
+        - converterToMat : ToMat
+        - filter : FFmpegFrameFilter
+        - frameHeight : int
+        - frameWidth : int
+        - handler : Handler
+        - previewBuffer : byte[]
+        - scaleType : int
+        - state : int
+        - stopThread : boolean
+        - surfaceExist : boolean
+        - surfaceHolder : SurfaceHolder
+        - surfaceTexture : SurfaceTexture
+        - syncObject : Object
+        - thread : Thread
+        + CvCameraPreview()
+        + CvCameraPreview()
+        + GetContext()
+        + SetCameraID()
+        + SetFrameWidth()
+        + getCameraId()
+        + onEnterStartedState()
+        + onPreviewFrame()
+        + setCvCameraViewListener()
+        + surfaceChanged()
+        + surfaceCreated()
+        + surfaceDestroyed()
+        # deliverAndDrawFrame()
+        # onMeasure()
+        # releaseCamera()
+        - checkCurrentState()
+        - connectCamera()
+        - disconnectCamera()
+        - getBestSize()
+        - getRotationDegree()
+        - initFilter()
+        - initializeCamera()
+        - initializer()
+        - onEnterStoppedState()
+        - onExitStartedState()
+        - onExitStoppedState()
+        - processEnterState()
+        - processExitState()
+        - processFrame()
+        - setCameraCallback()
+        - setupCamera()
+        - startCameraPreview()
+        - stopCameraPreview()
+        - updateCameraDisplayOrientation()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.CvCameraPreview.CameraWorker {
+        + run()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    interface com.danhyal.NEA.CvCameraPreview.CvCameraViewListener {
+        {abstract} + onCameraFrame()
+        {abstract} + onCameraViewStarted()
+        {abstract} + onCameraViewStopped()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.MainActivity {
+        {static} + CAMERA_BACK : String
+        {static} + CAMERA_FRONT : String
+        + CameraIds : int
+        {static} + FlashStatus : boolean
+        + PermissionGranted : boolean
+        + START_CAM : int
+        + getcontext : ContextCompat
+        ~ CameraRequestCode : int
+        ~ cam : Camera
+        ~ mat1 : Mat
+        ~ mat3 : Mat
+        ~ resized : Mat
+        {static} - CAMERA_REQUEST : int
+        - btnclickmeclicked : boolean
+        - cameraId : String
+        - isFlashSupported : boolean
+        - isTorchOn : boolean
+        + GetDimensions()
+        + SetPermissions()
+        # onCreate()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.MyAndroidFrameConverter {
+        ~ bitmap : Bitmap
+        ~ buffer : ByteBuffer
+        ~ row : byte[]
+        + convert()
+        + convert()
+        + convert()
+        ~ bgr2rgba()
+        ~ gray2rgba()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    abstract class com.danhyal.NEA.MyOpenCVFrameConverter {
+        ~ gmat : GpuMat
+        ~ img : IplImage
+        ~ mat : Mat
+        ~ orgOpenCvCoreMat : Mat
+        ~ umat : UMat
+        + Gconvert()
+        + Uconvert()
+        + convert()
+        + convert()
+        + convert()
+        + convertToGMat()
+        + convertToIplImage()
+        + convertToMat()
+        + convertToOrgOpenCvCoreMat()
+        + convertToUMat()
+        {static} + getFrameDepth()
+        {static} + getIplImageDepth()
+        {static} + getMatDepth()
+        {static} ~ GisEqual()
+        {static} ~ UisEqual()
+        {static} ~ isEqual()
+        {static} ~ isEqual()
+        {static} ~ isEqual()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.MyOpenCVFrameConverter.ToGMat {
+        + convert()
+        + convert()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.MyOpenCVFrameConverter.ToIplImage {
+        + convert()
+        + convert()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.MyOpenCVFrameConverter.ToMat {
+        + convert()
+        + convert()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.MyOpenCVFrameConverter.ToOrgOpenCvCoreMat {
+        + convert()
+        + convert()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.MyOpenCVFrameConverter.ToUMat {
+        + convert()
+        + convert()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.NetworkChoice {
+        # imgData : ByteBuffer
+        # tflite : Interpreter
+        ~ bytesperchannel : int
+        ~ converter1 : ToMat
+        ~ converter2 : ToOrgOpenCvCoreMat
+        ~ delegate : GpuDelegate
+        ~ isquantanized : boolean
+        ~ layout : ViewGroup
+        ~ m2 : Mat
+        ~ recognitions : ArrayList<Recognition>
+        ~ tfliteOptions : Options
+        {static} - BYTES_PER_CHANNEL : int
+        {static} - DIM_BATCH_SIZE : int
+        {static} - DIM_PIXEL_SIZE : int
+        {static} - IMAGE_MEAN : float
+        {static} - IMAGE_STD : float
+        {static} - NUM_DETECTIONS : int
+        {static} - TAG : String
+        {static} - choice : String
+        - gpuDelegate : GpuDelegate
+        - height : int
+        - intValues : int[]
+        - labelProbArray : float[][]
+        - labels : List<String>
+        {static} - m1 : Mat
+        - myTimer : Timer
+        - numDetections : float[]
+        - outputClasses : float[][]
+        - outputLocations : float[][][]
+        - outputScores : float[][]
+        - tfliteModel : MappedByteBuffer
+        - width : int
+        + detection()
+        {static} + getChoice()
+        + onCameraFrame()
+        + onCameraViewStarted()
+        + onCameraViewStopped()
+        + recognize()
+        + setM1()
+        # addPixelValue()
+        # onCreate()
+        - ServingGrpc()
+        - convertBitmapToByteBuffer()
+        {static} - getPath()
+        - loadLabelList()
+        - loadModelFile()
+    }
+  }
+  
+
+  namespace com.danhyal.NEA {
+    class com.danhyal.NEA.NetworkChoice.detectionthread {
+        + run()
+    }
+  }
+  
+
+  com.danhyal.NEA.CameraAct .up.|> com.danhyal.NEA.CvCameraPreview.CvCameraViewListener
+  com.danhyal.NEA.CameraAct -up-|> androidx.appcompat.app.AppCompatActivity
+  com.danhyal.NEA.CameraAct o-- com.danhyal.NEA.CvCameraPreview : javacvviewbase
+  com.danhyal.NEA.CameraAct +-down- com.danhyal.NEA.CameraAct.OnEventListener
+  com.danhyal.NEA.CameraAct +-down- com.danhyal.NEA.CameraAct.yoloasync
+  com.danhyal.NEA.CameraAct.yoloasync -up-|> android.os.AsyncTask
+  com.danhyal.NEA.Classifier +-down- com.danhyal.NEA.Classifier.Recognition
+  com.danhyal.NEA.CvCameraPreview .up.|> android.hardware.Camera.PreviewCallback
+  com.danhyal.NEA.CvCameraPreview .up.|> android.view.SurfaceHolder.Callback
+  com.danhyal.NEA.CvCameraPreview -up-|> android.view.SurfaceView
+  com.danhyal.NEA.CvCameraPreview o-- com.danhyal.NEA.MyOpenCVFrameConverter.ToUMat : converterToUmat
+  com.danhyal.NEA.CvCameraPreview o-- com.danhyal.NEA.CvCameraPreview.CvCameraViewListener : listener
+  com.danhyal.NEA.CvCameraPreview +-down- com.danhyal.NEA.CvCameraPreview.CameraWorker
+  com.danhyal.NEA.CvCameraPreview +-down- com.danhyal.NEA.CvCameraPreview.CvCameraViewListener
+  com.danhyal.NEA.CvCameraPreview.CameraWorker .up.|> java.lang.Runnable
+  com.danhyal.NEA.MainActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.danhyal.NEA.MyAndroidFrameConverter -up-|> org.bytedeco.javacv.FrameConverter
+  com.danhyal.NEA.MyOpenCVFrameConverter -up-|> org.bytedeco.javacv.FrameConverter
+  com.danhyal.NEA.MyOpenCVFrameConverter +-down- com.danhyal.NEA.MyOpenCVFrameConverter.ToGMat
+  com.danhyal.NEA.MyOpenCVFrameConverter +-down- com.danhyal.NEA.MyOpenCVFrameConverter.ToIplImage
+  com.danhyal.NEA.MyOpenCVFrameConverter +-down- com.danhyal.NEA.MyOpenCVFrameConverter.ToMat
+  com.danhyal.NEA.MyOpenCVFrameConverter +-down- com.danhyal.NEA.MyOpenCVFrameConverter.ToOrgOpenCvCoreMat
+  com.danhyal.NEA.MyOpenCVFrameConverter +-down- com.danhyal.NEA.MyOpenCVFrameConverter.ToUMat
+  com.danhyal.NEA.MyOpenCVFrameConverter.ToGMat -up-|> com.danhyal.NEA.MyOpenCVFrameConverter
+  com.danhyal.NEA.MyOpenCVFrameConverter.ToIplImage -up-|> com.danhyal.NEA.MyOpenCVFrameConverter
+  com.danhyal.NEA.MyOpenCVFrameConverter.ToMat -up-|> com.danhyal.NEA.MyOpenCVFrameConverter
+  com.danhyal.NEA.MyOpenCVFrameConverter.ToOrgOpenCvCoreMat -up-|> com.danhyal.NEA.MyOpenCVFrameConverter
+  com.danhyal.NEA.MyOpenCVFrameConverter.ToUMat -up-|> com.danhyal.NEA.MyOpenCVFrameConverter
+  com.danhyal.NEA.NetworkChoice .up.|> com.danhyal.NEA.CvCameraPreview.CvCameraViewListener
+  com.danhyal.NEA.NetworkChoice -up-|> androidx.appcompat.app.AppCompatActivity
+  com.danhyal.NEA.NetworkChoice o-- com.danhyal.NEA.CvCameraPreview : base
+  com.danhyal.NEA.NetworkChoice +-down- com.danhyal.NEA.NetworkChoice.detectionthread
+  com.danhyal.NEA.NetworkChoice.detectionthread .up.|> java.lang.Runnable
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
